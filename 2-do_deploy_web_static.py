@@ -1,9 +1,11 @@
 #!/usr/bin/python3
+# comment
 from fabric.api import *
 env.hosts = ['100.25.136.187', '54.236.50.4']
 
 
 def do_deploy(archive_path):
+    '''smart'''
     # env.user = 'ubuntu'
     # env.key_filename = [' ~/.ssh/id_rsa']
     try:
