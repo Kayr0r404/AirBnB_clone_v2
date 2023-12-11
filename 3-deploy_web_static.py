@@ -1,78 +1,70 @@
 #!/usr/bin/python3
-# creates and distributes an archive to your web servers
-
+"""
+this script creates and ditributes an archive to the the server, using deploy
+"""
+import os
 from datetime import datetime
-from fabric.api import env, put, run, local
-from os.path import exists
-
-env.hosts = ['100.25.136.187', '54.236.50.4']
-env.user = "ubuntu"
-env.key_filename = "~/.ssh/id_rsa"
+from fabric.api import env, local, put, run, runs_once
 
 
+env.hosts = ['100.26.163.17', '54.237.61.242']
+env.user = 'ubuntu'
+env.key_filename = '~/.ssh/id_rsa'
+
+
+@runs_once
 def do_pack():
-    """Generates a .tgz archive from the contents of the web_static folder."""
+    """make a tgz archive from static files."""
+    if not os.path.isdir("versions"):
+        os.mkdir("versions")
+    cur_time = datetime.now()
+    output = "versions/web_static_{}{}{}{}{}{}.tgz".format(
+        cur_time.year,
+        cur_time.month,
+        cur_time.day,
+        cur_time.hour,
+        cur_time.minute,
+        cur_time.second
+    )
     try:
-        # Create the versions folder if it doesn't exist
-        local("mkdir -p versions")
-
-        # Generate the archive filename
-        timestamp = datetime.utcnow().strftime('%Y%m%d%H%M%S')
-        archive_name = "web_static_{}.tgz".format(timestamp)
-
-        # Create the archive using tar
-        local("tar -cvzf versions/{} web_static".format(archive_name))
-
-        # Return the archive path if successful
-        return "versions/{}".format(archive_name)
-    except Exception as e:
-        # Print an error message and return None if an exception occurs
-        return None
+        print("Packing web_static to {}".format(output))
+        local("tar -cvzf {} web_static".format(output))
+        archize_size = os.stat(output).st_size
+        print("web_static packed: {} -> {} Bytes".format(output, archize_size))
+    except Exception:
+        output = None
+    return output
 
 
-# distributes an archive to your web servers, using the function do_deploy
 def do_deploy(archive_path):
-    """Distributes an archive to the web servers"""
-    if not exists(archive_path):
+    """Deploys thz archive to the host servers.
+    """
+    if not os.path.exists(archive_path):
         return False
-
+    file_n = os.path.basename(archive_path)
+    folder_n = file_n.replace(".tgz", "")
+    folder_path = "/data/web_static/releases/{}/".format(folder_n)
+    success = False
     try:
-        # Upload the archive to the /tmp/ directory of the web server
-        put(archive_path, '/tmp/')
-
-        # Extract the archive to
-        # /data/web_static/releases/<filename without extension>/
-        file_name = archive_path.split('/')[-1]
-        folder_name = '/data/web_static/releases/{}'.format(
-            file_name.split('.')[0])
-        run('mkdir -p {}'.format(folder_name))
-        run('tar -xzf /tmp/{} -C {}'.format(file_name, folder_name))
-
-        # Delete the archive from the web server
-        run('rm /tmp/{}'.format(file_name))
-
-        run('mv {}/web_static/* {}/'.format(folder_name, folder_name))
-        run('rm -rf {}/web_static'.format(folder_name))
-
-        # Delete the symbolic link /data/web_static/current
-        run('rm -f /data/web_static/current')
-
-        # Create a new symbolic link
-        run('ln -s {} /data/web_static/current'.format(folder_name))
-
-        print("New version deployed!")
-        return True
-
-    except Exception as e:
-        print(e)
-        return False
+        put(archive_path, "/tmp/{}".format(file_n))
+        run("mkdir -p {}".format(folder_path))
+        run("tar -xzf /tmp/{} -C {}".format(file_n, folder_path))
+        run("rm -rf /tmp/{}".format(file_n))
+        run("mv {}web_static/* {}".format(folder_path, folder_path))
+        run("rm -rf {}web_static".format(folder_path))
+        run("rm -rf /data/web_static/current")
+        run("ln -s {} /data/web_static/current".format(folder_path))
+        print('New version is now LIVE!')
+        success = True
+    except Exception:
+        success = False
+    return success
 
 
 def deploy():
-    """Create and distribute an archive to web servers"""
+    """Creates and dploy an archive to the host servers.
+    """
     archive_path = do_pack()
-
     if archive_path is None:
         return False
-
     return do_deploy(archive_path)
