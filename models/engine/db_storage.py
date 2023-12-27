@@ -5,6 +5,10 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from models.base_model import Base
 from models.city import City
 from models.state import State
+# from models.place import Place
+# from models.user import User
+# from  models.amenity import Amenity
+# from models.review import Review
 from os import getenv
 
 
@@ -13,6 +17,10 @@ class DBStorage:
 
     __engine = None
     __session = None
+    __clsdict = {
+        "State": State,
+        "City": City
+    }
 
     def __init__(self) -> None:
         '''define the constructor of the db class'''
@@ -26,27 +34,23 @@ class DBStorage:
         if getenv('HBNB_DEV') == 'test':
             Base.metadata.drop_all(bind=self.__engine)
 
-    def all(self, cls=None) -> dict:
-        '''query on the current db session all objects
-        depending on the class(cls) name
-        If cls=None, query all types of
-        objects(User, State, City, Amenity, Place and Review)'''
-
-        dict = {}
-        self.__session = sessionmaker(bind=self.__engine)()
-        classes = [City, State]
-        if cls in classes:
-            query = self.__session.query(cls).all()
-            for obj in query:
-                key = '{}.{}'.format(cls.__class__.__name__, cls.id)
-                dict[key] = obj
-        else:
-            for cls in classes:
-                query = self.__session.query(cls).all()
-                for obj in query:
-                    key = '{}.{}'.format(cls.__class__.__name__, cls.id)
-                    dict[key] = obj
-        return dict
+    def all(self, cls=None):
+        """query for objects depend on the class
+        Arguments:
+            cls: class to query
+        """
+        d = {}
+        cls = cls if not isinstance(cls, str) else self.__clsdict.get(cls)
+        if cls:
+            for obj in self.__session.query(cls):
+                d["{}.{}".format(
+                    cls.__name__, obj.id
+                    )] = obj
+            return (d)
+        for k, cls in self.__clsdict.items():
+            for obj in self.__session.query(cls):
+                d["{}.{}".format(cls.__name__, obj.id)] = obj
+        return (d)
 
     def new(self, obj) -> None:
         '''add the object to the current database session'''
@@ -65,7 +69,7 @@ class DBStorage:
         the session does not expire on commit'''
         Base.metadata.create_all(self.__engine)
         self.__Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(self.__Session)
+        self.__session = scoped_session(self.__Session)()
 
     def close(self):
         '''close the session'''

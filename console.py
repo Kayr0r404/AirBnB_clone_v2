@@ -23,7 +23,7 @@ class_dict = {
             'Amenity': Amenity
             }
 # get all data stored in a file
-storage.reload()
+# storage.reload()
 # get the dict of contents of the file invoked above
 obj = storage.all()
 
@@ -135,12 +135,10 @@ class HBNBCommand(cmd.Cmd):
 
         if len(line) == 0:
             list = [str(obj.get(key)) for key in obj.keys()]
-            if len(list) != 0:
-                print(list)
+            print(list)
         elif line in class_dict:
             list = [str(obj.get(key)) for key in obj.keys() if line in key]
-            if len(list) != 0:
-                print(list)
+            print(list)
         else:
             print('** class doesn\'t exist **')
 
