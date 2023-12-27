@@ -78,7 +78,6 @@ class HBNBCommand(cmd.Cmd):
                         _args = pline
                     else:
                         _args = pline.replace(',', '')
-                        # _args = _args.replace('\"', '')
             line = ' '.join([_cmd, _cls, _id, _args])
 
         except Exception as mess:
@@ -131,7 +130,6 @@ class HBNBCommand(cmd.Cmd):
                 if '_' in tmp[1]:
                     tmp[1] = tmp[1].replace("_", " ")
                 setattr(new_instance, tmp[0], tmp[1])
-        # storage.save()
         print(new_instance.id)
         new_instance.save()
 
