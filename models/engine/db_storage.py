@@ -27,8 +27,10 @@ class DBStorage:
             Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None) -> dict:
-        '''query on the current db session all objects depending on the class(cls) name
-        If cls=None, query all types of objects(User, State, City, Amenity, Place and Review)'''
+        '''query on the current db session all objects
+        depending on the class(cls) name
+        If cls=None, query all types of
+        objects(User, State, City, Amenity, Place and Review)'''
 
         dict = {}
         self.__session = sessionmaker(bind=self.__engine)()
@@ -62,5 +64,10 @@ class DBStorage:
         '''Create the current database session from the engine,
         the session does not expire on commit'''
         Base.metadata.create_all(self.__engine)
-        self.__Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        self.__Session = sessionmaker(bind=self.__engine,
+                                      expire_on_commit=False)
         self.__session = scoped_session(self.__Session)
+
+    def close(self):
+        '''close the session'''
+        self.__session.remove()
