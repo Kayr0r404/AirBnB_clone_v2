@@ -13,12 +13,12 @@ def states_list():
     """Displays an HTML page with a list of all State objects in DBStorage.
     States are sorted by name.
     """
-    states = storage.all("State")
-    return render_template("7-states_list.html", states=states)
+    states = sorted(list(storage.all("State").values()), key=lambda x: x.name)
+    return render_template('7-states_list.html', states=states)
 
 
 @app.teardown_appcontext
-def close_session(exception):
+def close_session():
     '''remove the current SQLAlchemy Session'''
     storage.close()
 
