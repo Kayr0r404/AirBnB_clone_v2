@@ -68,9 +68,9 @@ class DBStorage:
         '''Create the current database session from the engine,
         the session does not expire on commit'''
         Base.metadata.create_all(self.__engine)
-        self.__Session = sessionmaker(bind=self.__engine,
-                                      expire_on_commit=False)
-        self.__session = scoped_session(self.__Session)()
+        sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(sess_factory)
+        self.__session = Session
 
     def close(self):
         '''close the session'''
