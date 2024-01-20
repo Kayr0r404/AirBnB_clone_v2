@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+'''start flask script'''
+
 from flask import Flask, render_template
 from models import storage
 from models.state import State
@@ -13,7 +16,8 @@ def close_session(error):
 
 
 @app.route('/cities_by_states', strict_slashes=False)
-def states_list():
+def cities_by_states():
+    '''list cities by states'''
     # Retrieve and sort cities
     cities = storage.all(City).values()
     cities = sorted(cities, key=lambda k: k.name)
