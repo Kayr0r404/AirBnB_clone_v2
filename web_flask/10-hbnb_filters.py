@@ -7,8 +7,6 @@ from models import storage
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
-from models.place import Place
-from models.user import User
 
 app = Flask(__name__)
 
@@ -19,7 +17,7 @@ def close_session(error):
     storage.close()
 
 
-@app.route('/hbnb', strict_slashes=False)
+@app.route('/hbnb_filters', strict_slashes=False)
 def filters():
    # Retrieve and sort cities
     cities = storage.all(City).values()
@@ -33,17 +31,8 @@ def filters():
     amenities = storage.all(Amenity).values()
     amenities = sorted(amenities, key=lambda k: k.name)
 
-    # Retrieve and sort amenities
-    places = storage.all(Place).values()
-    places = sorted(places, key=lambda k: k.name)
-
-    # Retrieve and sort amenities
-    users = storage.all(User).values()
-    # users = sorted(users, key=lambda k: k.name)
-
-    return render_template('100-hbnb.html', states=states, cities=cities,
-                           amenities=amenities, places=places, users=users)
+    return render_template('10-hbnb_filters.html', states=states, cities=cities, amenities=amenities)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

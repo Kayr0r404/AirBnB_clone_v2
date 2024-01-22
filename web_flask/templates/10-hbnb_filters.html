@@ -9,7 +9,6 @@
 		<link rel="stylesheet" href="../static/styles/3-header.css"/>
 		<link rel="stylesheet" href="../static/styles/3-footer.css"/>
 		<link rel="stylesheet" href="../static/styles/6-filters.css"/>
-		<link rel="stylesheet" href="../static/styles/8-places.css"/>
 	</head>
     <body>
 		<header>
@@ -28,7 +27,7 @@
 								<ul>
 									{% for city in cities %}
 										{% if city.state_id == state.id %}
-											<li><h4>{{ city.name }}</h4></li>
+											<li> {{ city.name }} </li>
 										{% endif %}
 									{% endfor %}
 								</ul>
@@ -46,41 +45,6 @@
 					</ul>
 				</div>
 
-			</section>
-			<section class="places">
-				<h1>Places</h1>
-				{% for place in places %}
-				<article>
-						<div class="headline">
-							<h2>{{ place.name }}</h2>
-							<div class="price_by_night">${{ place.price_by_night }}</div>
-						</div>
-						<div class="information">
-							<div class="max_guest">
-								<div class="guest_icon"></div>
-								<p>{{ place.max_guest }}</p>
-							</div>
-							<div class="number_rooms">
-								<div class="bed_icon"></div>
-								<p>{{ place.number_rooms }}</p>
-							</div>
-							<div class="number_bathrooms">
-								<div class="bath_icon"></div>
-								<p>{{ place.number_bathrooms }}</p>
-							</div>
-						</div>
-						<div class="user">
-							{% for user in users %}
-								{% if user.id == place.user_id %}
-									<b>Owner</b>: {{ user.first_name }} {{ user.last_name }}
-								{% endif %}
-							{% endfor %}
-						</div>
-						<div class="description">
-							{{ place.description }}
-						</div>
-					{% endfor %}
-				</article>
 			</section>
 		</div>
 		<footer>

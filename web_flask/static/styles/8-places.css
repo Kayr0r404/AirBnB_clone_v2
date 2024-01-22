@@ -1,78 +1,29 @@
 .places {
-    column-count: 2;
-    columns: 30em;
+    position: relative;
+    display: flex;
     justify-content: center;
-    padding: 0 20px;
-    margin-top: 1%;
-    margin-bottom: 8%;
-}
-@media only screen and (max-width: 920px)
-{
-    .places {
-	display: flex;
-	flex-wrap: wrap;
-    }
+    flex-wrap: wrap;
+    
 }
 
-.placesh1 h1 {
+.places h1 {
+    font-size: 30px;
     width: 100%;
-    margin-right: 400px;
-    text-align: left;
-    font-size: 35px;
 }
 
 .places article {
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    display: inline-block;
     width: 390px;
-    height: 100%;
     padding: 20px;
     margin: 20px;
     border: 1px solid #FF5A5F;
     border-radius: 4px;
+    position: relative;
 }
+
 .places h2 {
     font-size: 30px;
     text-align: center;
-    margin-top: 0;
 }
-.title_box {
-    display: flex;
-    justify-content: space-between;
-    margin-top: -2%;
-}
-
-.title_box h2 {
-    text-align: left;
-    margin: 25px 3% 40px 2%;
-    max-width: 75%;
-    word-wrap: break-word;
-}
-.price_by_night {
-    display: flex;
-    height: 60px;
-    min-width: 60px;
-    font-size: 30px;
-    justify-content: center;
-    align-items: center;
-    color: #FF5A5F;
-    border: 4px solid #FF5A5F;
-    border-radius: 50%;
-    align-items: center;
-    padding: 2.3%;
-}
-
-.information {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80px;
-    border-top: 1px solid #DDDDDD;
-    border-bottom: 1px solid #DDDDDD;
-    margin-bottom: 5%;
-}
-
 .information div {
     display: flex;
     justify-content: flex-end;
@@ -80,22 +31,57 @@
     flex-direction: column;
     height: 65px;
 }
+.price_by_night {
+    color: #FF5A5F;
+    border: #FF5A5F solid 4px;
+    border-radius: 50%;
+    min-width: 60px;
+    height: 60px;
+    font-size: 30px;
+    position: absolute;
+    line-height: 60px;
+    text-align: center;
+    top: 30px;
+    right: 50px;
+}
+
+.information {
+    border-top: #dddddd solid 1px;
+    border-bottom: #dddddd solid 1px;
+    height: 80px;
+    display: flex;
+    justify-content: space-around;
+    line-height: 40px;
+}
 
 .information .max_guest {
-    background: url("../images/icon_group.png") no-repeat top center;
+    background-image: url('../images/icon_group.png');
+    background-repeat: no-repeat;
+    background-position: top;
+    height: 100%;
     width: 100px;
+    text-align: center;
+    line-height: 120px;
 }
-
 .information .number_rooms {
-    background: url("../images/icon_bed.png") no-repeat top center;
-    width: 100px;
-}
+    background-image: url('../images/icon_bed.png');
+    background-repeat: no-repeat;
+    background-position: top;
+    height: 100%;
+    text-align: center;
+    line-height: 120px;
 
+}
 .information .number_bathrooms {
-    background: url("../images/icon_bath.png") no-repeat top center;
-    width: 100px;
+    background-image: url('../images/icon_bath.png');
+    background-repeat: no-repeat;
+    background-position: top;
+    height: 100%;
+    text-align: center;
+    line-height: 120px;
 }
 
 .user {
-  margin-bottom: 1.5%;
+    height: 30px;
+    line-height: 30px;
 }
